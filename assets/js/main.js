@@ -4,6 +4,25 @@ const createCalculator = () => {
 
         start() {
             this.clickbuttons();
+            this.backspaceButton();
+            this.pressEnter();
+        },
+        
+        backspaceButton(){
+            this.display.addEventListener('keydown', e =>{
+                if(e.keyCode === 8){
+                    e.preventDefault();
+                    this.deleteOneCharacter();
+                }
+            });
+        },
+
+        pressEnter(){
+            this.display.addEventListener('keyup', e =>{
+                if(e.keyCode === 13){
+                    this.makeAccount();
+                }
+            });
         },
 
         clickbuttons() {
@@ -47,16 +66,13 @@ const createCalculator = () => {
 
             try {
                 account = eval(account);
-
-                if (!account) {
-                    alert('Conta invalida');
+                if (account === '' || Number.isNaN(account) || typeof account !== 'number') {
+                    alert('Conta inválida');
                     return;
                 }
-
                 this.display.value = String(account);
-
             } catch (e) {
-                alert('Conta invalida');
+                alert('Conta inválida');
                 return;
             }
         }
