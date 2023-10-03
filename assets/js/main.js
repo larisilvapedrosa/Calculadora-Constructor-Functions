@@ -1,31 +1,31 @@
-const createCalculator = () => {
-    return {
-        display: document.querySelector('.display'),
+class Calculator {
+    constructor() {
+        this.display = document.querySelector('.display');
 
-        start() {
+        this.start = () => {
             this.clickbuttons();
             this.backspaceButton();
             this.pressEnter();
-        },
-        
-        backspaceButton(){
-            this.display.addEventListener('keydown', e =>{
-                if(e.keyCode === 8){
+        };
+
+        this.backspaceButton = () => {
+            this.display.addEventListener('keydown', e => {
+                if (e.keyCode === 8) {
                     e.preventDefault();
                     this.deleteOneCharacter();
                 }
             });
-        },
+        };
 
-        pressEnter(){
-            this.display.addEventListener('keyup', e =>{
-                if(e.keyCode === 13){
+        this.pressEnter = () => {
+            this.display.addEventListener('keyup', e => {
+                if (e.keyCode === 13) {
                     this.makeAccount();
                 }
             });
-        },
+        };
 
-        clickbuttons() {
+        this.clickbuttons = () => {
             document.addEventListener('click', e => {
                 const el = e.target;
 
@@ -47,37 +47,45 @@ const createCalculator = () => {
 
                 this.display.focus();
             });
-        },
+        };
 
-        btnForDisplay(valor) {
+        this.btnForDisplay = (valor) => {
             this.display.value += valor;
-        },
+        };
 
-        clearDisplay() {
+        this.clearDisplay = () => {
             this.display.value = '';
-        },
+        };
 
-        deleteOneCharacter() {
+        this.deleteOneCharacter = () => {
             this.display.value = this.display.value.slice(0, -1);
-        },
+        };
 
-        makeAccount() {
+        this.makeAccount = () => {
             let account = this.display.value;
-
+    
             try {
-                account = eval(account);
-                if (account === '' || Number.isNaN(account) || typeof account !== 'number') {
+                const result = this.evaluateExpression(account);
+                if (result === null || isNaN(result)) {
                     alert('Conta inválida');
-                    return;
+                } else {
+                    this.display.value = String(result);
                 }
-                this.display.value = String(account);
             } catch (e) {
                 alert('Conta inválida');
-                return;
             }
         }
-    };
+    
+        this.evaluateExpression = (expression) => {
+            try {
+                const fn = new Function(`return ${expression}`);
+                return fn();
+            } catch (error) {
+                return null;
+            }
+        }
+    }
 }
 
-const calculator = createCalculator();
+const calculator = new Calculator();
 calculator.start();
